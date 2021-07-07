@@ -16,7 +16,7 @@ func Logger(logger log.Logger) func(http.Handler) http.Handler {
 			wrap := middleware.NewWrapResponseWriter(w, r.ProtoMajor)
 			next.ServeHTTP(wrap, r)
 
-			logger.Debug().
+			logger.Info().
 				Str("request", r.Header.Get("X-Request-ID")).
 				Str("proto", r.Proto).
 				Str("method", r.Method).

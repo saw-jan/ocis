@@ -15,6 +15,7 @@ import (
 	acc "github.com/owncloud/ocis/accounts/pkg/proto/v0"
 	"github.com/owncloud/ocis/ocis-pkg/conversions"
 	"github.com/owncloud/ocis/ocis-pkg/log"
+	pkgmiddlware "github.com/owncloud/ocis/ocis-pkg/middleware"
 	"github.com/owncloud/ocis/ocis-pkg/service/grpc"
 	"github.com/owncloud/ocis/ocis-pkg/sync"
 	"github.com/owncloud/ocis/proxy/pkg/config"
@@ -176,6 +177,9 @@ func loadMiddlewares(ctx context.Context, l log.Logger, cfg *config.Config) alic
 	}
 
 	return alice.New(
+		pkgmiddlware.Logger(l),
+		pkgmiddlware.RealIP,
+		pkgmiddlware.RequestID,
 		middleware.HTTPSRedirect,
 		middleware.Authentication(
 			// OIDC Options
