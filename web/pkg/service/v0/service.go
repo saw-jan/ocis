@@ -32,15 +32,23 @@ func NewService(opts ...Option) Service {
 	m := chi.NewMux()
 	m.Use(options.Middleware...)
 
+	fs := assets.New(
+		assets.Logger(options.Logger),
+		assets.Config(options.Config),
+	)
+
 	svc := Web{
 		logger: options.Logger,
 		config: options.Config,
 		mux:    m,
+		assets: fs,
 	}
 
 	m.Route(options.Config.HTTP.Root, func(r chi.Router) {
 		r.Get("/config.json", svc.Config)
 		r.Mount("/", svc.Static(options.Config.HTTP.CacheTTL))
+		r.Get("/apps/files/config.json", svc.Config)
+		r.Mount("/apps/files", http.StripPrefix("/apps/files", svc.Static(options.Config.HTTP.CacheTTL)))
 	})
 
 	return svc
@@ -51,6 +59,7 @@ type Web struct {
 	logger log.Logger
 	config *config.Config
 	mux    *chi.Mux
+	assets http.FileSystem
 }
 
 // ServeHTTP implements the Service interface.
@@ -136,12 +145,7 @@ func (p Web) Static(ttl int) http.HandlerFunc {
 
 	static := http.StripPrefix(
 		rootWithSlash,
-		http.FileServer(
-			assets.New(
-				assets.Logger(p.logger),
-				assets.Config(p.config),
-			),
-		),
+		http.FileServer(p.assets),
 	)
 
 	// TODO: investigate broken caching - https://github.com/owncloud/ocis/issues/1094
