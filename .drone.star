@@ -13,6 +13,7 @@ config = {
         "settings",
         "storage",
         "store",
+	"search",
         "thumbnails",
         "web",
         "webdav",
