@@ -29,6 +29,7 @@ import (
 	proxy "github.com/owncloud/ocis/proxy/pkg/command"
 	settings "github.com/owncloud/ocis/settings/pkg/command"
 	storage "github.com/owncloud/ocis/storage/pkg/command"
+	search "github.com/owncloud/ocis/search/pkg/command"
 	store "github.com/owncloud/ocis/store/pkg/command"
 	thumbnails "github.com/owncloud/ocis/thumbnails/pkg/command"
 	web "github.com/owncloud/ocis/web/pkg/command"
@@ -96,6 +97,7 @@ func NewService(options ...Option) (*Service, error) {
 	s.ServicesRegistry["idp"] = idp.NewSutureService
 	s.ServicesRegistry["ocs"] = ocs.NewSutureService
 	s.ServicesRegistry["store"] = store.NewSutureService
+	s.ServicesRegistry["search"] = search.NewSutureService
 	s.ServicesRegistry["thumbnails"] = thumbnails.NewSutureService
 	s.ServicesRegistry["web"] = web.NewSutureService
 	s.ServicesRegistry["webdav"] = webdav.NewSutureService

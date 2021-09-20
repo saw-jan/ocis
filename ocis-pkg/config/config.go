@@ -11,6 +11,7 @@ import (
 	settings "github.com/owncloud/ocis/settings/pkg/config"
 	storage "github.com/owncloud/ocis/storage/pkg/config"
 	store "github.com/owncloud/ocis/store/pkg/config"
+	search "github.com/owncloud/ocis/search/pkg/config"
 	thumbnails "github.com/owncloud/ocis/thumbnails/pkg/config"
 	web "github.com/owncloud/ocis/web/pkg/config"
 	webdav "github.com/owncloud/ocis/webdav/pkg/config"
@@ -102,6 +103,7 @@ type Config struct {
 	Settings      *settings.Config
 	Storage       *storage.Config
 	Store         *store.Config
+	Search	      *search.Config
 	Thumbnails    *thumbnails.Config
 	WebDAV        *webdav.Config
 }
@@ -120,6 +122,7 @@ func New() *Config {
 		Settings:      settings.New(),
 		Storage:       storage.New(),
 		Store:         store.New(),
+		Search:        search.New(),
 		Thumbnails:    thumbnails.New(),
 		WebDAV:        webdav.New(),
 	}

@@ -28,6 +28,7 @@ OCIS_MODULES = \
 	settings \
 	storage \
 	store \
+	search \
 	thumbnails \
 	web \
 	webdav

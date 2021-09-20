@@ -1,0 +1,112 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "ownCloud Infinite Scale search",
+    "version": "1.0.0",
+    "contact": {
+      "name": "ownCloud GmbH",
+      "url": "https://github.com/owncloud/ocis",
+      "email": "support@owncloud.com"
+    },
+    "license": {
+      "name": "Apache-2.0",
+      "url": "https://github.com/owncloud/ocis/blob/master/LICENSE"
+    }
+  },
+  "tags": [
+    {
+      "name": "Search"
+    }
+  ],
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {},
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "typeUrl": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v0IndexResponse": {
+      "type": "object"
+    },
+    "v0Record": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "title": "type of file eg. File, Path"
+        },
+        "fileName": {
+          "type": "string",
+          "title": "the relative file name in the space^"
+        },
+        "spaceId": {
+          "type": "string",
+          "title": "the space Id"
+        }
+      }
+    },
+    "v0SearchResponse": {
+      "type": "object",
+      "properties": {
+        "records": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v0Record"
+          }
+        }
+      }
+    },
+    "v0Term": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "title": "type of value e.g string, int, int64, bool, float64"
+        },
+        "value": {
+          "type": "string",
+          "title": "the actual value"
+        }
+      }
+    }
+  },
+  "externalDocs": {
+    "description": "Developer Manual",
+    "url": "https://owncloud.dev/extensions/search/"
+  }
+}
