@@ -272,6 +272,11 @@ func cs3StorageSpaceToDrive(baseURL *url.URL, space *storageprovider.StorageSpac
 		},
 	}
 
+	// project spaces have no single owner, therefore we don't return a value
+	if space.SpaceType == "project" {
+		drive.Owner = nil
+	}
+
 	if baseURL != nil {
 		// TODO read from StorageSpace ... needs Opaque for now
 		// TODO how do we build the url?
