@@ -49,7 +49,7 @@ func Action(cfg config.Config) func(c *cli.Context) error {
 			cancel() // calling cancel() will cause the micro-service to shut down.
 		})
 
-		return nil
+		return g.Run()
 	}
 }
 
@@ -58,9 +58,10 @@ type PSuture struct {
 	cfg config.Config
 }
 
-func NewPSuture(ctx context.Context) suture.Service {
+func NewPSuture(ctx context.Context, cfg interface{}) suture.Service {
 	return PSuture{
 		ctx: ctx,
+		cfg: cfg.(config.Config),
 	}
 }
 

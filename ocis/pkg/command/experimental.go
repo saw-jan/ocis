@@ -5,7 +5,6 @@ package command
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net"
 	"net/http"
@@ -14,9 +13,12 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/mohae/deepcopy"
+
 	"github.com/owncloud/ocis/ocis-pkg/config"
 	"github.com/owncloud/ocis/ocis/pkg/register"
 	pcommand "github.com/owncloud/ocis/proxy/pkg/command"
+	proxyFlagset "github.com/owncloud/ocis/proxy/pkg/flagset"
 	"github.com/thejerf/suture/v4"
 	"github.com/urfave/cli/v2"
 )
@@ -39,6 +41,7 @@ func Experimental(cfg *config.Config) *cli.Command {
 		Name:     "experimental",
 		Usage:    "Start fullstack server",
 		Category: "Experimental",
+		Flags:    proxyFlagset.ServerWithConfig(cfg.Proxy),
 		Action: func(c *cli.Context) error {
 			var (
 				s               = Service{}
@@ -75,7 +78,7 @@ func Experimental(cfg *config.Config) *cli.Command {
 			}
 
 			// add the proxy service
-			s.Supervisor.Add(pcommand.NewPSuture(rootCtx))
+			s.Supervisor.Add(pcommand.NewPSuture(rootCtx, deepcopy.Copy(*cfg.Proxy)))
 
 			// run supervised services
 			go s.Supervisor.ServeBackground(s.context)
@@ -85,7 +88,6 @@ func Experimental(cfg *config.Config) *cli.Command {
 				os.Exit(0)
 			}()
 
-			fmt.Println("runtime listening on: localhost:16666")
 			return http.Serve(l, nil)
 		},
 	}
