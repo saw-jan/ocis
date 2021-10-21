@@ -173,6 +173,13 @@ func ServerWithConfig(cfg *config.Config) []cli.Flag {
 			EnvVars: []string{"THUMBNAILS_RESOLUTIONS"},
 		},
 		&cli.StringFlag{
+			Name:        "txt-font-map-file",
+			Value:       flags.OverrideDefaultString(cfg.Thumbnail.FontMapFile, ""),
+			Usage:       "The font map file to be used for plain text file",
+			EnvVars:     []string{"THUMBNAILS_TXT_FONTMAP_FILE"},
+			Destination: &cfg.Thumbnail.FontMapFile,
+		},
+		&cli.StringFlag{
 			Name:        "webdav-namespace",
 			Value:       flags.OverrideDefaultString(cfg.Thumbnail.WebdavNamespace, "/home"),
 			Usage:       "Namespace prefix for the webdav endpoint",

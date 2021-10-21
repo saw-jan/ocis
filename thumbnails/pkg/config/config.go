@@ -66,6 +66,7 @@ type Thumbnail struct {
 	CS3AllowInsecure    bool
 	RevaGateway         string
 	WebdavNamespace     string
+	FontMapFile         string
 }
 
 // New initializes a new configuration with or without defaults.
