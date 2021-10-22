@@ -9,11 +9,13 @@ The following sections list the changes for unreleased.
 * Security - Don't expose services by default: [#2612](https://github.com/owncloud/ocis/issues/2612)
 * Change - Configurable default quota: [#2621](https://github.com/owncloud/ocis/issues/2621)
 * Change - New default data paths and easier configuration of the data path: [#2590](https://github.com/owncloud/ocis/pull/2590)
+* Change - Split spaces webdav url and graph url in base and path: [#2660](https://github.com/owncloud/ocis/pull/2660)
 * Enhancement - Add user setting capability: [#2655](https://github.com/owncloud/ocis/pull/2655)
 * Enhancement - Broaden bufbuild/Buf usage: [#2630](https://github.com/owncloud/ocis/pull/2630)
 * Enhancement - Replace fileb0x with go-embed: [#1199](https://github.com/owncloud/ocis/issues/1199)
 * Enhancement - Upgrade to go-micro v4.1.0: [#2616](https://github.com/owncloud/ocis/pull/2616)
 * Enhancement - Lower TUS max chunk size: [#2584](https://github.com/owncloud/ocis/pull/2584)
+* Enhancement - Add sharees additional info paramater config to ocs: [#2637](https://github.com/owncloud/ocis/pull/2637)
 * Enhancement - Add a middleware to authenticate public share requests: [#2536](https://github.com/owncloud/ocis/pull/2536)
 * Enhancement - Report quota states: [#2628](https://github.com/owncloud/ocis/pull/2628)
 * Enhancement - Start up a new machine auth provider in the storage service: [#2528](https://github.com/owncloud/ocis/pull/2528)
@@ -56,6 +58,15 @@ The following sections list the changes for unreleased.
 
    https://github.com/owncloud/ocis/pull/2590
 
+* Change - Split spaces webdav url and graph url in base and path: [#2660](https://github.com/owncloud/ocis/pull/2660)
+
+   We've fixed the behavior for the spaces webdav url and graph explorer graph url settings, so
+   that they respect the environment variable `OCIS_URL`. Previously oCIS admins needed to set
+   these URLs manually to make spaces and the graph explorer work.
+
+   https://github.com/owncloud/ocis/issues/2659
+   https://github.com/owncloud/ocis/pull/2660
+
 * Enhancement - Add user setting capability: [#2655](https://github.com/owncloud/ocis/pull/2655)
 
    We've added a capability to communicate the existance of a user settings service to clients.
@@ -92,6 +103,10 @@ The following sections list the changes for unreleased.
 
    https://github.com/owncloud/ocis/pull/2584
    https://github.com/cs3org/reva/pull/2136
+
+* Enhancement - Add sharees additional info paramater config to ocs: [#2637](https://github.com/owncloud/ocis/pull/2637)
+
+   https://github.com/owncloud/ocis/pull/2637
 
 * Enhancement - Add a middleware to authenticate public share requests: [#2536](https://github.com/owncloud/ocis/pull/2536)
 
