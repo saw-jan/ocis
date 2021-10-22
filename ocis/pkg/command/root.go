@@ -27,7 +27,8 @@ func Execute() error {
 		Compiled: version.Compiled(),
 
 		Before: func(c *cli.Context) error {
-			return ParseConfig(c, cfg)
+			//return ParseConfig(c, cfg)
+			return nil
 		},
 
 		Authors: []*cli.Author{

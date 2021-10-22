@@ -6,10 +6,10 @@ import (
 
 // Log defines the available logging configuration.
 type Log struct {
-	Level  string
-	Pretty bool
-	Color  bool
-	File   string
+	Level  string `yaml:"level"`
+	Pretty bool   `yaml:"pretty"`
+	Color  bool   `yaml:"color"`
+	File   string `yaml:"file"`
 }
 
 // Debug defines the available debug configuration.
@@ -103,7 +103,7 @@ type Cache struct {
 // Config combines all available configuration parts.
 type Config struct {
 	File                  string
-	Log                   Log
+	Log                   Log `yaml:"log"`
 	Debug                 Debug
 	HTTP                  HTTP
 	Service               Service

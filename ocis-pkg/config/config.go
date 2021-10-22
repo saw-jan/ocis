@@ -18,10 +18,10 @@ import (
 
 // Log defines the available logging configuration.
 type Log struct {
-	Level  string
-	Pretty bool
-	Color  bool
-	File   string
+	Level  string `yaml:"level"`
+	Pretty bool   `yaml:"pretty"`
+	Color  bool   `yaml:"color"`
+	File   string `yaml:"file"`
 }
 
 // Debug defines the available debug configuration.
@@ -83,7 +83,7 @@ type Config struct {
 	File string
 
 	Registry     string
-	Log          Log
+	Log          Log `yaml:"log"`
 	Debug        Debug
 	HTTP         HTTP
 	GRPC         GRPC
@@ -98,7 +98,7 @@ type Config struct {
 	IDP           *idp.Config
 	OCS           *ocs.Config
 	Web           *web.Config
-	Proxy         *proxy.Config
+	Proxy         *proxy.Config `yaml:"proxy"`
 	Settings      *settings.Config
 	Storage       *storage.Config
 	Store         *store.Config

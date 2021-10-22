@@ -6,6 +6,7 @@ import (
 
 	"github.com/thejerf/suture/v4"
 
+	ociscfg "github.com/owncloud/ocis/ocis-pkg/config"
 	"github.com/owncloud/ocis/proxy/pkg/metrics"
 	"github.com/owncloud/ocis/proxy/pkg/proxy"
 	proxyHTTP "github.com/owncloud/ocis/proxy/pkg/server/http"
@@ -58,10 +59,14 @@ type PSuture struct {
 	cfg config.Config
 }
 
-func NewPSuture(ctx context.Context, cfg interface{}) suture.Service {
+// NewPSuture creates a new suture.Service.
+// The only real shared config should be about logging
+func NewPSuture(ctx context.Context, cfg ociscfg.Config) suture.Service {
+	c := configureLogging(cfg)
+
 	return PSuture{
 		ctx: ctx,
-		cfg: cfg.(config.Config),
+		cfg: c,
 	}
 }
 
@@ -72,4 +77,12 @@ func (s PSuture) Serve(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+func configureLogging(cfg ociscfg.Config) config.Config {
+	cfg.Proxy.Log.Level = cfg.Log.Level
+	cfg.Proxy.Log.Color = cfg.Log.Color
+	cfg.Proxy.Log.Pretty = cfg.Log.Pretty
+
+	return *cfg.Proxy
 }
