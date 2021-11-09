@@ -188,7 +188,7 @@ func (idx *Unique) Remove(id string, v string) error {
 		return err
 	}
 
-	deletePath := path.Join("/meta", idx.indexRootDir, v)
+	deletePath := path.Join("/", idx.indexRootDir, v)
 	ctx = metadata.AppendToOutgoingContext(ctx, revactx.TokenHeader, t)
 	resp, err := idx.storageProvider.Delete(ctx, &provider.DeleteRequest{
 		Ref: &provider.Reference{
@@ -241,7 +241,7 @@ func (idx *Unique) Search(pattern string) ([]string, error) {
 	ctx = metadata.AppendToOutgoingContext(ctx, revactx.TokenHeader, t)
 	res, err := idx.storageProvider.ListContainer(ctx, &provider.ListContainerRequest{
 		Ref: &provider.Reference{
-			Path: path.Join("/meta", idx.indexRootDir),
+			Path: path.Join("/", idx.indexRootDir),
 		},
 	})
 
