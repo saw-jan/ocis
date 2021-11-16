@@ -45,7 +45,7 @@ func FrontendWithConfig(cfg *config.Config) []cli.Flag {
 
 		&cli.StringFlag{
 			Name:        "webdav-namespace",
-			Value:       flags.OverrideDefaultString(cfg.Reva.OCDav.WebdavNamespace, "/home"),
+			Value:       flags.OverrideDefaultString(cfg.Reva.OCDav.WebdavNamespace, "/users/{{.Id.OpaqueId}}"),
 			Usage:       "Namespace prefix for the /webdav endpoint",
 			EnvVars:     []string{"STORAGE_WEBDAV_NAMESPACE"},
 			Destination: &cfg.Reva.OCDav.WebdavNamespace,

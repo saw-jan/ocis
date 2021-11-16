@@ -149,7 +149,7 @@ func GatewayWithConfig(cfg *config.Config) []cli.Flag {
 		},
 		&cli.StringFlag{
 			Name:        "storage-shares-provider",
-			Value:       flags.OverrideDefaultString(cfg.Reva.StorageRegistry.HomeProvider, "/home"),
+			Value:       flags.OverrideDefaultString(cfg.Reva.StorageRegistry.HomeProvider, "/users"),
 			Usage:       "mount point of the storage provider for user homes in the global namespace",
 			EnvVars:     []string{"STORAGE_STORAGE_REGISTRY_HOME_PROVIDER"},
 			Destination: &cfg.Reva.StorageRegistry.HomeProvider,
