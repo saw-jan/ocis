@@ -12,21 +12,21 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-// StorageHomeCommand is the entrypoint for the storage-home command.
-func StorageHomeCommand(cfg *config.Config) *cli.Command {
+// StorageSharesCommand is the entrypoint for the storage-shares command.
+func StorageSharesCommand(cfg *config.Config) *cli.Command {
 	return &cli.Command{
-		Name:     "storage-home",
-		Usage:    "Start storage and data provider for /home mount",
+		Name:     "storage-shares",
+		Usage:    "Start storage and data provider for /home/Shares mount",
 		Category: "Extensions",
-		Flags:    flagset.StorageHomeWithConfig(cfg.Storage),
+		Flags:    flagset.StorageSharesWithConfig(cfg.Storage),
 		Action: func(c *cli.Context) error {
-			origCmd := command.StorageHome(configureStorageHome(cfg))
+			origCmd := command.StorageShares(configureStorageShares(cfg))
 			return handleOriginalAction(c, origCmd)
 		},
 	}
 }
 
-func configureStorageHome(cfg *config.Config) *svcconfig.Config {
+func configureStorageShares(cfg *config.Config) *svcconfig.Config {
 	cfg.Storage.Log.Level = cfg.Log.Level
 	cfg.Storage.Log.Pretty = cfg.Log.Pretty
 	cfg.Storage.Log.Color = cfg.Log.Color
@@ -42,5 +42,5 @@ func configureStorageHome(cfg *config.Config) *svcconfig.Config {
 }
 
 func init() {
-	register.AddCommand(StorageHomeCommand)
+	register.AddCommand(StorageSharesCommand)
 }

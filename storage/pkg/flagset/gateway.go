@@ -94,7 +94,7 @@ func GatewayWithConfig(cfg *config.Config) []cli.Flag {
 			Destination: &cfg.Reva.Gateway.DisableHomeCreationOnLogin,
 		},
 		&cli.StringFlag{
-			Name:        "storage-home-mapping",
+			Name:        "storage-shares-mapping",
 			Value:       flags.OverrideDefaultString(cfg.Reva.Gateway.HomeMapping, ""),
 			Usage:       "mapping template for user home paths to user-specific mount points, e.g. /home/{{substr 0 1 .Username}}",
 			EnvVars:     []string{"STORAGE_GATEWAY_HOME_MAPPING"},
@@ -136,7 +136,7 @@ func GatewayWithConfig(cfg *config.Config) []cli.Flag {
 
 		&cli.StringFlag{
 			Name:        "storage-registry-driver",
-			Value:       flags.OverrideDefaultString(cfg.Reva.StorageRegistry.Driver, "static"),
+			Value:       flags.OverrideDefaultString(cfg.Reva.StorageRegistry.Driver, "spaces"),
 			Usage:       "driver of the storage registry",
 			EnvVars:     []string{"STORAGE_STORAGE_REGISTRY_DRIVER"},
 			Destination: &cfg.Reva.StorageRegistry.Driver,
@@ -148,7 +148,7 @@ func GatewayWithConfig(cfg *config.Config) []cli.Flag {
 			EnvVars: []string{"STORAGE_STORAGE_REGISTRY_RULES"},
 		},
 		&cli.StringFlag{
-			Name:        "storage-home-provider",
+			Name:        "storage-shares-provider",
 			Value:       flags.OverrideDefaultString(cfg.Reva.StorageRegistry.HomeProvider, "/home"),
 			Usage:       "mount point of the storage provider for user homes in the global namespace",
 			EnvVars:     []string{"STORAGE_STORAGE_REGISTRY_HOME_PROVIDER"},
@@ -225,30 +225,6 @@ func GatewayWithConfig(cfg *config.Config) []cli.Flag {
 			Destination: &cfg.Reva.AppProvider.Endpoint,
 		},
 
-		// register home storage
-
-		&cli.StringFlag{
-			Name:        "storage-home-endpoint",
-			Value:       flags.OverrideDefaultString(cfg.Reva.StorageHome.Endpoint, "localhost:9154"),
-			Usage:       "endpoint to use for the home storage",
-			EnvVars:     []string{"STORAGE_HOME_ENDPOINT"},
-			Destination: &cfg.Reva.StorageHome.Endpoint,
-		},
-		&cli.StringFlag{
-			Name:        "storage-home-mount-path",
-			Value:       flags.OverrideDefaultString(cfg.Reva.StorageHome.MountPath, "/home"),
-			Usage:       "mount path",
-			EnvVars:     []string{"STORAGE_HOME_MOUNT_PATH"},
-			Destination: &cfg.Reva.StorageHome.MountPath,
-		},
-		&cli.StringFlag{
-			Name:        "storage-home-mount-id",
-			Value:       flags.OverrideDefaultString(cfg.Reva.StorageHome.MountID, "1284d238-aa92-42ce-bdc4-0b0000009154"),
-			Usage:       "mount id",
-			EnvVars:     []string{"STORAGE_HOME_MOUNT_ID"},
-			Destination: &cfg.Reva.StorageHome.MountID,
-		},
-
 		// register users storage
 
 		&cli.StringFlag{
@@ -271,6 +247,30 @@ func GatewayWithConfig(cfg *config.Config) []cli.Flag {
 			Usage:       "mount id",
 			EnvVars:     []string{"STORAGE_USERS_MOUNT_ID"},
 			Destination: &cfg.Reva.StorageUsers.MountID,
+		},
+
+		// register shares storage
+
+		&cli.StringFlag{
+			Name:        "storage-shares-endpoint",
+			Value:       flags.OverrideDefaultString(cfg.Reva.StorageShares.Endpoint, "localhost:9154"),
+			Usage:       "endpoint to use for the home storage",
+			EnvVars:     []string{"STORAGE_SHARES_ENDPOINT"},
+			Destination: &cfg.Reva.StorageShares.Endpoint,
+		},
+		&cli.StringFlag{
+			Name:        "storage-shares-mount-path",
+			Value:       flags.OverrideDefaultString(cfg.Reva.StorageShares.MountPath, "/home/Shares"),
+			Usage:       "mount path",
+			EnvVars:     []string{"STORAGE_SHARES_MOUNT_PATH"},
+			Destination: &cfg.Reva.StorageShares.MountPath,
+		},
+		&cli.StringFlag{
+			Name:        "storage-shares-mount-id",
+			Value:       flags.OverrideDefaultString(cfg.Reva.StorageShares.MountID, "1284d238-aa92-42ce-bdc4-0b0000009154"),
+			Usage:       "mount id",
+			EnvVars:     []string{"STORAGE_SHARES_MOUNT_ID"},
+			Destination: &cfg.Reva.StorageShares.MountID,
 		},
 
 		// register public link storage

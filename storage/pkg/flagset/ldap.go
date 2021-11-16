@@ -82,7 +82,7 @@ func LDAPWithConfig(cfg *config.Config) []cli.Flag {
 			Name: "ldap-usergroupfilter",
 			// FIXME the storage implementation needs to use the memberof overlay to get the cn when it only has the uuid,
 			// because the ldap schema either uses the dn or the member(of) attributes to establish membership
-			Value:       flags.OverrideDefaultString(cfg.Reva.LDAP.UserGroupFilter, "(&(objectclass=posixGroup)(ownclouduuid={{.OpaqueId}}*))"), // This filter will never work
+			Value:       flags.OverrideDefaultString(cfg.Reva.LDAP.UserGroupFilter, "(&(objectclass=posixGroup)(ownclouduuid={{.}}*))"), // This filter will never work
 			Usage:       "LDAP filter used when getting the groups of a user. The CS3 userid properties {{.OpaqueId}} and {{.Idp}} are available.",
 			EnvVars:     []string{"STORAGE_LDAP_USERGROUPFILTER"},
 			Destination: &cfg.Reva.LDAP.UserGroupFilter,
@@ -93,7 +93,7 @@ func LDAPWithConfig(cfg *config.Config) []cli.Flag {
 
 		&cli.StringFlag{
 			Name:        "ldap-groupfilter",
-			Value:       flags.OverrideDefaultString(cfg.Reva.LDAP.GroupFilter, "(&(objectclass=posixGroup)(|(ownclouduuid={{.OpaqueId}})(cn={{.OpaqueId}})))"),
+			Value:       flags.OverrideDefaultString(cfg.Reva.LDAP.GroupFilter, "(&(objectclass=posixGroup)(|(ownclouduuid={{.}})(cn={{.}})))"),
 			Usage:       "LDAP filter used when getting a group. The CS3 groupid properties {{.OpaqueId}} and {{.Idp}} are available.",
 			EnvVars:     []string{"STORAGE_LDAP_GROUPFILTER"},
 			Destination: &cfg.Reva.LDAP.GroupFilter,

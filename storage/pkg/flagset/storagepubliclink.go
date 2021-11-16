@@ -34,19 +34,18 @@ func StoragePublicLink(cfg *config.Config) []cli.Flag {
 		},
 
 		&cli.StringFlag{
-			Name:        "mount-path",
-			Value:       flags.OverrideDefaultString(cfg.Reva.StoragePublicLink.MountPath, "/public"),
-			Usage:       "mount path",
-			EnvVars:     []string{"STORAGE_PUBLIC_LINK_MOUNT_PATH"},
-			Destination: &cfg.Reva.StoragePublicLink.MountPath,
-		},
-
-		&cli.StringFlag{
 			Name:        "reva-gateway-addr",
 			Value:       flags.OverrideDefaultString(cfg.Reva.Gateway.Endpoint, "127.0.0.1:9142"),
 			Usage:       "Address of REVA gateway endpoint",
 			EnvVars:     []string{"REVA_GATEWAY"},
 			Destination: &cfg.Reva.Gateway.Endpoint,
+		},
+		&cli.StringFlag{
+			Name:        "storage-public-mount-id",
+			Value:       flags.OverrideDefaultString(cfg.Reva.StoragePublicLink.MountID, "7993447f-687f-490d-875c-ac95e89a62a4"),
+			Usage:       "mount id",
+			EnvVars:     []string{"STORAGE_PUBLIC_LINK_MOUNT_ID"},
+			Destination: &cfg.Reva.StoragePublicLink.MountID,
 		},
 	}
 

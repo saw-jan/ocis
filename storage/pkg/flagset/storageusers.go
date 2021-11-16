@@ -86,13 +86,6 @@ func StorageUsersWithConfig(cfg *config.Config) []cli.Flag {
 			Destination: &cfg.Reva.StorageUsers.ReadOnly,
 		},
 		&cli.StringFlag{
-			Name:        "mount-path",
-			Value:       flags.OverrideDefaultString(cfg.Reva.StorageUsers.MountPath, "/users"),
-			Usage:       "mount path",
-			EnvVars:     []string{"STORAGE_USERS_MOUNT_PATH"},
-			Destination: &cfg.Reva.StorageUsers.MountPath,
-		},
-		&cli.StringFlag{
 			Name:        "mount-id",
 			Value:       flags.OverrideDefaultString(cfg.Reva.StorageUsers.MountID, "1284d238-aa92-42ce-bdc4-0b0000009157"),
 			Usage:       "mount id",

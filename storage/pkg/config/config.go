@@ -455,7 +455,7 @@ type Reva struct {
 	AuthMachine       Port
 	AuthMachineConfig AuthMachineConfig
 	Sharing           Sharing
-	StorageHome       StoragePort
+	StorageShares     StoragePort
 	StorageUsers      StoragePort
 	StoragePublicLink PublicStorage
 	StorageMetadata   StoragePort
