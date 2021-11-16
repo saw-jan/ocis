@@ -134,8 +134,9 @@ func FrontendWithConfig(cfg *config.Config) []cli.Flag {
 			Destination: &cfg.Reva.Frontend.DatagatewayPrefix,
 		},
 		&cli.BoolFlag{
-			Name:        "favorites",
-			Value:       flags.OverrideDefaultBool(cfg.Reva.Frontend.Favorites, false),
+			Name: "favorites",
+			// FIXME somehow I cannot set this to true using the env var ..
+			Value:       flags.OverrideDefaultBool(cfg.Reva.Frontend.Favorites, true),
 			Usage:       "announces favorites support to clients",
 			EnvVars:     []string{"STORAGE_FRONTEND_FAVORITES"},
 			Destination: &cfg.Reva.Frontend.Favorites,
