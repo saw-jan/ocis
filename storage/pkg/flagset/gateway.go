@@ -290,6 +290,14 @@ func GatewayWithConfig(cfg *config.Config) []cli.Flag {
 			Destination: &cfg.Reva.StoragePublicLink.MountPath,
 		},
 		// public-link has no mount id
+
+		&cli.StringFlag{
+			Name:        "permissions-endpoint",
+			Value:       flags.OverrideDefaultString(cfg.Reva.Permissions.Endpoint, "localhost:9191"),
+			Usage:       "permissions endpoint",
+			EnvVars:     []string{"STORAGE_PERMISSIONS_ENDPOINT"},
+			Destination: &cfg.Reva.Permissions.Endpoint,
+		},
 	}
 
 	flags = append(flags, TracingWithConfig(cfg)...)

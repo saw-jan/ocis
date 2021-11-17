@@ -249,3 +249,7 @@ require (
 
 // this is a transitive replace. See https://github.com/libregraph/lico/blob/master/go.mod#L38
 replace github.com/crewjam/saml => github.com/crewjam/saml v0.4.5
+
+replace github.com/cs3org/go-cs3apis => /home/corby/work/go/src/github.com/c0rby/cs3apis/build/go-cs3apis/
+
+replace github.com/cs3org/reva => /home/corby/work/go/src/github.com/c0rby/reva/

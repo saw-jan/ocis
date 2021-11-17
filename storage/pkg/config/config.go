@@ -468,6 +468,7 @@ type Reva struct {
 	StoragePublicLink PublicStorage
 	StorageMetadata   StoragePort
 	AppProvider       AppProvider
+	Permissions       Port
 	// Configs can be used to configure the reva instance.
 	// Services and Ports will be ignored if this is used
 	Configs map[string]interface{}
