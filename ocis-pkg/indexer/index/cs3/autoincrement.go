@@ -22,6 +22,7 @@ import (
 	"github.com/cs3org/reva/pkg/rgrpc/todo/pool"
 	"github.com/cs3org/reva/pkg/token"
 	"github.com/cs3org/reva/pkg/token/manager/jwt"
+	"github.com/cs3org/reva/pkg/utils"
 	"google.golang.org/grpc/metadata"
 
 	"github.com/owncloud/ocis/ocis-pkg/indexer/index"
@@ -72,6 +73,7 @@ func NewAutoincrementIndex(o ...option.Option) index.Index {
 		},
 		dataProvider: dataProviderClient{
 			baseURL: singleJoiningSlash(opts.DataURL, opts.DataPrefix),
+			spaceid: opts.ServiceUser.UUID,
 			client: http.Client{
 				Transport: http.DefaultTransport,
 			},
@@ -177,7 +179,11 @@ func (idx *Autoincrement) Remove(id string, v string) error {
 	deletePath := path.Join("/", idx.indexRootDir, v)
 	resp, err := idx.storageProvider.Delete(ctx, &provider.DeleteRequest{
 		Ref: &provider.Reference{
-			Path: deletePath,
+			ResourceId: &provider.ResourceId{
+				StorageId: idx.cs3conf.ServiceUser.UUID,
+				OpaqueId:  idx.cs3conf.ServiceUser.UUID,
+			},
+			Path: utils.MakeRelativePath(deletePath),
 		},
 	})
 
@@ -215,7 +221,11 @@ func (idx *Autoincrement) Search(pattern string) ([]string, error) {
 
 	res, err := idx.storageProvider.ListContainer(ctx, &provider.ListContainerRequest{
 		Ref: &provider.Reference{
-			Path: path.Join("/", idx.indexRootDir),
+			ResourceId: &provider.ResourceId{
+				StorageId: idx.cs3conf.ServiceUser.UUID,
+				OpaqueId:  idx.cs3conf.ServiceUser.UUID,
+			},
+			Path: utils.MakeRelativePath(idx.indexRootDir),
 		},
 	})
 
@@ -313,7 +323,10 @@ func (idx *Autoincrement) resolveSymlink(name string) (string, error) {
 }
 
 func (idx *Autoincrement) makeDirIfNotExists(ctx context.Context, folder string) error {
-	return storage.MakeDirIfNotExist(ctx, idx.storageProvider, folder)
+	return storage.MakeDirIfNotExist(ctx, idx.storageProvider, &provider.ResourceId{
+		StorageId: idx.cs3conf.ServiceUser.UUID,
+		OpaqueId:  idx.cs3conf.ServiceUser.UUID,
+	}, folder)
 }
 
 func (idx *Autoincrement) authenticate(ctx context.Context) (token string, err error) {
@@ -328,7 +341,11 @@ func (idx *Autoincrement) next() (int, error) {
 
 	res, err := idx.storageProvider.ListContainer(ctx, &provider.ListContainerRequest{
 		Ref: &provider.Reference{
-			Path: path.Join("/", idx.indexRootDir),
+			ResourceId: &provider.ResourceId{
+				StorageId: idx.cs3conf.ServiceUser.UUID,
+				OpaqueId:  idx.cs3conf.ServiceUser.UUID,
+			},
+			Path: utils.MakeRelativePath(idx.indexRootDir),
 		},
 	})
 
@@ -375,5 +392,5 @@ func (idx *Autoincrement) Delete() error {
 		return err
 	}
 
-	return deleteIndexRoot(ctx, idx.storageProvider, idx.indexRootDir)
+	return deleteIndexRoot(ctx, idx.storageProvider, idx.cs3conf.ServiceUser.UUID, idx.indexRootDir)
 }

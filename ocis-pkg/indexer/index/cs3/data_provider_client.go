@@ -3,16 +3,18 @@ package cs3
 import (
 	"io"
 	"net/http"
+	"path/filepath"
 	"strings"
 )
 
 type dataProviderClient struct {
 	client  http.Client
+	spaceid string
 	baseURL string
 }
 
 func (d dataProviderClient) put(url string, body io.Reader, token string) (*http.Response, error) {
-	req, err := http.NewRequest(http.MethodPut, singleJoiningSlash(d.baseURL, url), body)
+	req, err := http.NewRequest(http.MethodPut, singleJoiningSlash(d.baseURL, filepath.Join("spaces", d.spaceid+"!"+d.spaceid, url)), body)
 	if err != nil {
 		return nil, err
 	}
@@ -22,7 +24,7 @@ func (d dataProviderClient) put(url string, body io.Reader, token string) (*http
 }
 
 func (d dataProviderClient) get(url string, token string) (*http.Response, error) {
-	req, err := http.NewRequest(http.MethodGet, singleJoiningSlash(d.baseURL, url), nil)
+	req, err := http.NewRequest(http.MethodGet, singleJoiningSlash(d.baseURL, filepath.Join("spaces", d.spaceid+"!"+d.spaceid, url)), nil)
 	if err != nil {
 		return nil, err
 	}
