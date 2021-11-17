@@ -164,7 +164,7 @@ func FrontendWithConfig(cfg *config.Config) []cli.Flag {
 		},
 		&cli.StringFlag{
 			Name:        "ocs-home-namespace",
-			Value:       flags.OverrideDefaultString(cfg.Reva.Frontend.OCSHomeNamespace, "/home"),
+			Value:       flags.OverrideDefaultString(cfg.Reva.Frontend.OCSHomeNamespace, "/users/{{.Id.OpaqueId}}"),
 			Usage:       "the prefix prepended to the incoming requests in OCS",
 			EnvVars:     []string{"STORAGE_FRONTEND_OCS_HOME_NAMESPACE"},
 			Destination: &cfg.Reva.Frontend.OCSHomeNamespace,
