@@ -52,6 +52,7 @@ services:
       ocis-net:
     user: "33:33" # equals the user "www-data" for oC10
     environment:
+      PROXY_ENABLE_BASIC_AUTH: "true"
       # Keycloak IDP specific configuration
       PROXY_OIDC_ISSUER: https://${KEYCLOAK_DOMAIN:-keycloak.owncloud.test}/auth/realms/${KEYCLOAK_REALM:-owncloud}
       WEB_OIDC_AUTHORITY: https://${KEYCLOAK_DOMAIN:-keycloak.owncloud.test}/auth/realms/${KEYCLOAK_REALM:-owncloud}
