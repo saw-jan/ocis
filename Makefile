@@ -51,8 +51,9 @@ help:
 	@echo
 	@echo -e "${GREEN}Testing with test suite natively installed:${RESET}\n"
 	@echo -e "${PURPLE}\tdocs: https://owncloud.dev/ocis/development/testing/#testing-with-test-suite-natively-installed${RESET}\n"
-	@echo -e "\tmake test-acceptance-api\t${BLUE}run API acceptance tests${RESET}"
-	@echo -e "\tmake clean-tests\t\t${BLUE}delete API tests framework dependencies${RESET}"
+	@echo -e "\tmake test-acceptance-api\t\t${BLUE}run API acceptance tests${RESET}"
+	@echo -e "\tmake test-paralleldeployment-api\t${BLUE}run API acceptance tests for parallel deployment${RESET}"
+	@echo -e "\tmake clean-tests\t\t\t${BLUE}delete API tests framework dependencies${RESET}"
 	@echo
 	@echo -e "${BLACK}---------------------------------------------------------${RESET}"
 	@echo
@@ -87,6 +88,10 @@ BEHAT_BIN=vendor-bin/behat/vendor/bin/behat
 .PHONY: test-acceptance-api
 test-acceptance-api: vendor-bin/behat/vendor
 	BEHAT_BIN=$(BEHAT_BIN) $(PATH_TO_CORE)/tests/acceptance/run.sh --remote --type api
+
+.PHONY: test-paralleldeployment-api
+test-paralleldeployment-api:
+	BEHAT_BIN=$(BEHAT_BIN) tests/parallelDeployAcceptance/run.sh --type api
 
 vendor/bamarni/composer-bin-plugin: composer.lock
 	composer install
