@@ -2043,10 +2043,15 @@ def parallelAcceptance(env):
         "image": OC_CI_PHP,
         "environment": environment,
         "commands": [
+            "cd tests/parallelDeployAcceptance",
+            "ls",
+            "cd features",
+            "ls",
+            "cd /drone/src",
             "make test-paralleldeployment-api",
         ],
         "depends_on": ["composer-install", "wait-for-oc10", "wait-for-ocis"],
-        "volumes": [stepVolumeOC10Apps],
+        "volumes": appendVolumes([stepVolumeOC10Apps, stepVolumeOC10TestHelpers]),
     }]
 
 def cloneCoreRepo():
@@ -2059,6 +2064,10 @@ def cloneCoreRepo():
                 "git clone -b $CORE_BRANCH --single-branch --no-tags https://github.com/owncloud/core.git /srv/app/testrunner",
                 "cd /srv/app/testrunner",
                 "git checkout $CORE_COMMITID",
+                # copy bootstrap, libs and helpers
+                "rsync -aIX /srv/app/testrunner/tests/acceptance/features/bootstrap /drone/src/tests/parallelDeployAcceptance/features",
+                "rsync -aIX /srv/app/testrunner/tests/lib /drone/src/tests",
+                "rsync -aIX /srv/app/testrunner/tests/TestHelpers /drone/src/tests",
             ],
             "volumes": [stepVolumeOC10TestHelpers],
         },
