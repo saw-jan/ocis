@@ -307,9 +307,14 @@ class HttpRequestHelper {
 			$body = \http_build_query($body, '', '&');
 			$headers['Content-Type'] = 'application/x-www-form-urlencoded';
 		}
-		if (OcisHelper::isTestingParallelDeploy()) {
+
+		$oC10ServerUrl = \getenv('TEST_OC10_URL');
+		// set 'owncloud-selector' cookie header only if testing for parallel deployment
+		// and if the request server is not oc10 server
+		if (OcisHelper::isTestingParallelDeploy() && strpos($url, $oC10ServerUrl) === false) {
 			$headers['Cookie'] = self::getOCSelectorCookie();
 		}
+
 		$request = new Request(
 			$method,
 			$url,

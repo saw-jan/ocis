@@ -5,7 +5,7 @@ default:
     apiShareManagement:
       paths:
         - "%paths.base%/../features/apiShareManagement"
-      context: &common_feature_context_params
+      context: &common_ldap_suite_context
         parameters:
           ldapAdminPassword: admin
           ldapUsersOU: users
@@ -21,18 +21,9 @@ default:
     apiWebdavOperations:
       paths:
         - "%paths.base%/../features/apiWebdavOperations"
-      context: &common_feature_context_params
-        parameters:
-          ldapAdminPassword: admin
-          ldapUsersOU: users
-          ldapGroupsOU: groups
+      context: *common_ldap_suite_context
       contexts:
-        - FeatureContext: &common_feature_context_params
-            baseUrl: https://ocis:9200
-            adminUsername: admin
-            adminPassword: admin
-            regularUserPassword: 1234
-            ocPath: apps/testing/api/v1/occ
+        - FeatureContext: *common_feature_context_params
 
   extensions:
     jarnaiz\JUnitFormatter\JUnitFormatterExtension:
