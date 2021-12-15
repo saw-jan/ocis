@@ -8,6 +8,9 @@ OCIS_PATH=${SCRIPT_PATH}/../../
 
 BEHAT_YML="${SCRIPT_PATH}/config/behat.yml"
 
+# use autoload from core repo
+export BEHAT_PARAMS="{'autoload': '${PATH_TO_CORE}/tests/acceptance/features/bootstrap'}"
+
 # Allow optionally passing in the path to the behat program.
 if [ -z "${BEHAT_BIN}" ]
 then

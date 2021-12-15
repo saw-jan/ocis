@@ -1903,6 +1903,11 @@ stepVolumeOCISConfig = \
         "name": "proxy-config",
         "path": "/etc/ocis",
     }
+stepVolumeOC10TestHelpers = \
+    {
+        "name": "oc10-test-helpers",
+        "path": "/srv/app",
+    }
 
 # pipeline volumes
 pipeOC10TemplatesVol = \
@@ -1933,6 +1938,11 @@ pipeOC10OCISSharedVol = \
 pipeOCISConfigVol = \
     {
         "name": "proxy-config",
+        "temp": {},
+    }
+pipeOC10TestHelpers = \
+    {
+        "name": "oc10-test-helpers",
         "temp": {},
     }
 
@@ -1980,6 +1990,7 @@ def parallelDeployAcceptancePipeline(ctx):
                     "arch": "amd64",
                 },
                 "steps":
+                    cloneCoreRepo() +
                     composerInstall() +
                     copyConfigs() +
                     waitForServices() +
@@ -2015,7 +2026,7 @@ def parallelAcceptance(env):
     environment = {
         "TEST_SERVER_URL": OCIS_URL,
         "TEST_OC10_URL": OC10_URL,
-        "PARALLEL_DEPLOY": "true",
+        "TEST_PARALLEL_DEPLOYMENT": "true",
         "TEST_OCIS": "true",
         "TEST_WITH_LDAP": "true",
         "REVA_LDAP_PORT" : 636,
@@ -2023,6 +2034,7 @@ def parallelAcceptance(env):
         "REVA_LDAP_HOSTNAME": "openldap",
         "REVA_LDAP_BIND_DN": "cn=admin,dc=owncloud,dc=com",
         "SKELETON_DIR": "/var/www/owncloud/apps/testing/data/apiSkeleton",
+        "PATH_TO_CORE": "/srv/app/testrunner"
     }
     environment.update(env)
 
@@ -2034,8 +2046,23 @@ def parallelAcceptance(env):
             "make test-paralleldeployment-api",
         ],
         "depends_on": ["composer-install", "wait-for-oc10", "wait-for-ocis"],
-        "volumes": appendVolumes([stepVolumeOC10Apps]),
+        "volumes": [stepVolumeOC10Apps],
     }]
+
+def cloneCoreRepo():
+    return [
+        {
+            "name": "clone-core-repo",
+            "image": OC_CI_ALPINE,
+            "commands": [
+                "source /drone/src/.drone.env",
+                "git clone -b $CORE_BRANCH --single-branch --no-tags https://github.com/owncloud/core.git /srv/app/testrunner",
+                "cd /srv/app/testrunner",
+                "git checkout $CORE_COMMITID",
+            ],
+            "volumes": [stepVolumeOC10TestHelpers],
+        },
+    ]
 
 def latestOcisServer():
     environment = {
