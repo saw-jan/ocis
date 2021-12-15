@@ -2031,7 +2031,7 @@ def parallelAcceptance(env):
         "image": OC_CI_PHP,
         "environment": environment,
         "commands": [
-            "make -C ./tests/parallelDeployAcceptance test-paralleldeployment-api",
+            "make test-paralleldeployment-api",
         ],
         "depends_on": ["composer-install", "wait-for-oc10", "wait-for-ocis"],
         "volumes": appendVolumes([stepVolumeOC10Apps]),
