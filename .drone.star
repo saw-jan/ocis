@@ -1991,7 +1991,6 @@ def parallelDeployAcceptancePipeline(ctx):
                 },
                 "steps":
                     cloneCoreRepo() +
-                    composerInstall() +
                     copyConfigs() +
                     waitForServices() +
                     oC10Server() +
@@ -2011,6 +2010,7 @@ def parallelDeployAcceptancePipeline(ctx):
                     pipeOC10CronsVol,
                     pipeOC10OCISSharedVol,
                     pipeOCISConfigVol,
+                    pipeOC10TestHelpers,
                 ]),
                 "trigger": {
                     "ref": [
@@ -2043,14 +2043,9 @@ def parallelAcceptance(env):
         "image": OC_CI_PHP,
         "environment": environment,
         "commands": [
-            "cd tests/parallelDeployAcceptance",
-            "ls",
-            "cd features",
-            "ls",
-            "cd /drone/src",
             "make test-paralleldeployment-api",
         ],
-        "depends_on": ["composer-install", "wait-for-oc10", "wait-for-ocis"],
+        "depends_on": ["wait-for-oc10", "wait-for-ocis"],
         "volumes": appendVolumes([stepVolumeOC10Apps, stepVolumeOC10TestHelpers]),
     }]
 
@@ -2065,9 +2060,9 @@ def cloneCoreRepo():
                 "cd /srv/app/testrunner",
                 "git checkout $CORE_COMMITID",
                 # copy bootstrap, libs and helpers
-                "rsync -aIX /srv/app/testrunner/tests/acceptance/features/bootstrap /drone/src/tests/parallelDeployAcceptance/features",
-                "rsync -aIX /srv/app/testrunner/tests/lib /drone/src/tests",
-                "rsync -aIX /srv/app/testrunner/tests/TestHelpers /drone/src/tests",
+                # "rsync -aIX /srv/app/testrunner/tests/acceptance/features/bootstrap /drone/src/tests/parallelDeployAcceptance/features",
+                # "rsync -aIX /srv/app/testrunner/tests/lib /drone/src/tests",
+                # "rsync -aIX /srv/app/testrunner/tests/TestHelpers /drone/src/tests",
             ],
             "volumes": [stepVolumeOC10TestHelpers],
         },
@@ -2313,16 +2308,6 @@ def oc10DbService():
         },
         
     ]
-
-def composerInstall():
-    return [{
-        "name": "composer-install",
-        "image": OC_CI_PHP,
-        "commands": [
-            "cd ./vendor-bin/behat",
-            "composer install",
-        ],
-    }]
 
 def copyConfigs():
     return [{

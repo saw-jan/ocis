@@ -1,6 +1,7 @@
 default:
   autoload:
     "": "%paths.base%/../features/bootstrap"
+
   suites:
     apiShareManagement:
       paths:
@@ -10,8 +11,9 @@ default:
           ldapAdminPassword: admin
           ldapUsersOU: TestUsers
           ldapGroupsOU: TestGroups
-          ldapInitialUserFilePath: /../../config/ldap_users_groups.ldif
+          ldapInitialUserFilePath: /ldap_users_groups.ldif
       contexts:
+        - InitializeContext:
         - FeatureContext: &common_feature_context_params
             baseUrl: https://ocis:9200
             adminUsername: admin
@@ -24,6 +26,7 @@ default:
         - "%paths.base%/../features/apiWebdavOperations"
       context: *common_ldap_suite_context
       contexts:
+        - InitializeContext:
         - FeatureContext: *common_feature_context_params
 
   extensions:

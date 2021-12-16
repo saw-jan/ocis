@@ -84,14 +84,19 @@ clean-tests:
 	@rm -Rf vendor-bin/**/vendor vendor-bin/**/composer.lock tests/acceptance/output
 
 BEHAT_BIN=vendor-bin/behat/vendor/bin/behat
+# behat config file for parallel deployment tests
+PARALLEL_BEHAT_YML=tests/parallelDeployAcceptance/config/behat.yml
 
 .PHONY: test-acceptance-api
 test-acceptance-api: vendor-bin/behat/vendor
 	BEHAT_BIN=$(BEHAT_BIN) $(PATH_TO_CORE)/tests/acceptance/run.sh --remote --type api
 
 .PHONY: test-paralleldeployment-api
-test-paralleldeployment-api:
-	BEHAT_BIN=$(BEHAT_BIN) tests/parallelDeployAcceptance/run.sh --type api
+test-paralleldeployment-api: vendor-bin/behat/vendor
+	BEHAT_BIN=$(BEHAT_BIN) BEHAT_YML=$(PARALLEL_BEHAT_YML) $(PATH_TO_CORE)/tests/acceptance/run.sh --type api
+
+# BEHAT_BIN=$(BEHAT_BIN) tests/parallelDeployAcceptance/run.sh --type api
+# BEHAT_BIN=$(BEHAT_BIN) BEHAT_YML=$(PARALLEL_BEHAT_YML) $(PATH_TO_CORE)/tests/acceptance/run.sh --type api
 
 vendor/bamarni/composer-bin-plugin: composer.lock
 	composer install
