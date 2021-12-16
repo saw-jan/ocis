@@ -26,9 +26,9 @@ use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 require_once 'bootstrap.php';
 
 /**
- * Initialize Context
+ * Steps related to proxy server 
  */
-class InitializeContext implements Context {
+class ProxyContext implements Context {
 
 	/**
 	 * @var FeatureContext
@@ -47,5 +47,23 @@ class InitializeContext implements Context {
 	public function setUpScenario(BeforeScenarioScope $scope): void {
 		$environment = $scope->getEnvironment();
 		$this->featureContext = $environment->getContext('FeatureContext');
+		SetupHelper::init(
+			$this->featureContext->getAdminUsername(),
+			$this->featureContext->getAdminPassword(),
+			$this->featureContext->getBaseUrl(),
+			$this->featureContext->getOcPath()
+		);
+	}
+
+	/**
+	 * @Given using :selector as owncloud selector
+	 *
+	 * @param string $selector	'ocis' or 'oc10'
+	 *
+	 * @return void
+	 */
+	public function usingOwncloudSelector(string $selector): void {
+		$this->featureContext->setOCSelector($selector);
+		HttpRequestHelper::setOCSelectorCookie("owncloud-selector=$selector;path=/;");
 	}
 }

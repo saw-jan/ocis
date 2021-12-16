@@ -1888,11 +1888,6 @@ stepVolumeOC10Apps = \
         "name": "core-apps",
         "path": "/var/www/owncloud/apps",
     }
-stepVolumeOC10Crons = \
-    {
-        "name": "crons",
-        "path": "/tmp",
-    }
 stepVolumeOC10OCISData = \
     {
         "name": "data",
@@ -1923,11 +1918,6 @@ pipeOC10PreServerVol = \
 pipeOC10AppsVol = \
     {
         "name": "core-apps",
-        "temp": {},
-    }
-pipeOC10CronsVol = \
-    {
-        "name": "crons",
         "temp": {},
     }
 pipeOC10OCISSharedVol = \
@@ -2007,7 +1997,6 @@ def parallelDeployAcceptancePipeline(ctx):
                     pipeOC10TemplatesVol, 
                     pipeOC10PreServerVol,
                     pipeOC10AppsVol,
-                    pipeOC10CronsVol,
                     pipeOC10OCISSharedVol,
                     pipeOCISConfigVol,
                     pipeOC10TestHelpers,
@@ -2034,7 +2023,8 @@ def parallelAcceptance(env):
         "REVA_LDAP_HOSTNAME": "openldap",
         "REVA_LDAP_BIND_DN": "cn=admin,dc=owncloud,dc=com",
         "SKELETON_DIR": "/var/www/owncloud/apps/testing/data/apiSkeleton",
-        "PATH_TO_CORE": "/srv/app/testrunner"
+        "PATH_TO_CORE": "/srv/app/testrunner",
+        "OCIS_REVA_DATA_ROOT": "",
     }
     environment.update(env)
 
@@ -2059,10 +2049,6 @@ def cloneCoreRepo():
                 "git clone -b $CORE_BRANCH --single-branch --no-tags https://github.com/owncloud/core.git /srv/app/testrunner",
                 "cd /srv/app/testrunner",
                 "git checkout $CORE_COMMITID",
-                # copy bootstrap, libs and helpers
-                # "rsync -aIX /srv/app/testrunner/tests/acceptance/features/bootstrap /drone/src/tests/parallelDeployAcceptance/features",
-                # "rsync -aIX /srv/app/testrunner/tests/lib /drone/src/tests",
-                # "rsync -aIX /srv/app/testrunner/tests/TestHelpers /drone/src/tests",
             ],
             "volumes": [stepVolumeOC10TestHelpers],
         },
@@ -2219,7 +2205,6 @@ def oC10Server():
                 stepVolumeOC10Apps,
                 stepVolumeOC10Templates,
                 stepVolumeOC10PreServer,
-                stepVolumeOC10Crons,
             ]),
             "depends_on": ["wait-for-services", "copy-configs"],
         },
@@ -2325,14 +2310,12 @@ def copyConfigs():
             "cp %s/oc10/ldap-config.tmpl.json /etc/templates/ldap-config.tmpl.json" % (PARALLEL_DEPLOY_CONFIG_PATH),
             "cp %s/oc10/web.config.php /etc/templates/web.config.php" % (PARALLEL_DEPLOY_CONFIG_PATH),
             "cp %s/oc10/web-config.tmpl.json /etc/templates/web-config.tmpl.json" % (PARALLEL_DEPLOY_CONFIG_PATH),
-            "cp %s/oc10/ldap-sync-cron /tmp/ldap-sync-cron" % (PARALLEL_DEPLOY_CONFIG_PATH),
             "cp %s/oc10/10-custom-config.sh /etc/pre_server.d/10-custom-config.sh" % (PARALLEL_DEPLOY_CONFIG_PATH),
         ],
         "volumes": appendVolumes([
             stepVolumeOCISConfig,
             stepVolumeOC10Templates,
             stepVolumeOC10PreServer,
-            stepVolumeOC10Crons,
         ]),
     }]
 
