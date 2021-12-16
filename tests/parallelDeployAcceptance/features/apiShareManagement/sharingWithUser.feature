@@ -2,7 +2,7 @@
 # Sharing tests currently doesn't work
 # Accessing oc10 shares from ocis still WIP in PR #2232
 # https://github.com/owncloud/ocis/pull/2232
-
+@api
 Feature: sharing files and folders
   As a user
   I want to share files/folders with other users
