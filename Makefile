@@ -95,9 +95,6 @@ test-acceptance-api: vendor-bin/behat/vendor
 test-paralleldeployment-api: vendor-bin/behat/vendor
 	BEHAT_BIN=$(BEHAT_BIN) BEHAT_YML=$(PARALLEL_BEHAT_YML) $(PATH_TO_CORE)/tests/acceptance/run.sh --type api
 
-# BEHAT_BIN=$(BEHAT_BIN) tests/parallelDeployAcceptance/run.sh --type api
-# BEHAT_BIN=$(BEHAT_BIN) BEHAT_YML=$(PARALLEL_BEHAT_YML) $(PATH_TO_CORE)/tests/acceptance/run.sh --type api
-
 vendor/bamarni/composer-bin-plugin: composer.lock
 	composer install
 
