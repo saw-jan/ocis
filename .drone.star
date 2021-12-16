@@ -1888,6 +1888,11 @@ stepVolumeOC10Apps = \
         "name": "core-apps",
         "path": "/var/www/owncloud/apps",
     }
+stepVolumeOC10Crons = \
+    {
+        "name": "crons",
+        "path": "/tmp",
+    }
 stepVolumeOC10OCISData = \
     {
         "name": "data",
@@ -1897,11 +1902,6 @@ stepVolumeOCISConfig = \
     {
         "name": "proxy-config",
         "path": "/etc/ocis",
-    }
-stepVolumeOC10TestHelpers = \
-    {
-        "name": "oc10-test-helpers",
-        "path": "/srv/app",
     }
 
 # pipeline volumes
@@ -1920,6 +1920,11 @@ pipeOC10AppsVol = \
         "name": "core-apps",
         "temp": {},
     }
+pipeOC10CronsVol = \
+    {
+        "name": "crons",
+        "temp": {},
+    }
 pipeOC10OCISSharedVol = \
     {
         "name": "data",
@@ -1928,11 +1933,6 @@ pipeOC10OCISSharedVol = \
 pipeOCISConfigVol = \
     {
         "name": "proxy-config",
-        "temp": {},
-    }
-pipeOC10TestHelpers = \
-    {
-        "name": "oc10-test-helpers",
         "temp": {},
     }
 
@@ -1980,7 +1980,7 @@ def parallelDeployAcceptancePipeline(ctx):
                     "arch": "amd64",
                 },
                 "steps":
-                    cloneCoreRepo() +
+                    cloneCoreRepos() +
                     copyConfigs() +
                     waitForServices() +
                     oC10Server() +
@@ -1997,9 +1997,10 @@ def parallelDeployAcceptancePipeline(ctx):
                     pipeOC10TemplatesVol, 
                     pipeOC10PreServerVol,
                     pipeOC10AppsVol,
+                    pipeOC10CronsVol,
                     pipeOC10OCISSharedVol,
                     pipeOCISConfigVol,
-                    pipeOC10TestHelpers,
+                    pipelineVolumeOC10Tests,
                 ]),
                 "trigger": {
                     "ref": [
@@ -2025,6 +2026,7 @@ def parallelAcceptance(env):
         "SKELETON_DIR": "/var/www/owncloud/apps/testing/data/apiSkeleton",
         "PATH_TO_CORE": "/srv/app/testrunner",
         "OCIS_REVA_DATA_ROOT": "",
+        "EXPECTED_FAILURES_FILE": "/drone/src/tests/parallelDeployAcceptance/expected-failures-API.md",
     }
     environment.update(env)
 
@@ -2035,24 +2037,9 @@ def parallelAcceptance(env):
         "commands": [
             "make test-paralleldeployment-api",
         ],
-        "depends_on": ["wait-for-oc10", "wait-for-ocis"],
-        "volumes": appendVolumes([stepVolumeOC10Apps, stepVolumeOC10TestHelpers]),
+        "depends_on": ["clone-core-repos", "wait-for-oc10", "wait-for-ocis"],
+        "volumes": appendVolumes([stepVolumeOC10Apps, stepVolumeOC10Tests]),
     }]
-
-def cloneCoreRepo():
-    return [
-        {
-            "name": "clone-core-repo",
-            "image": OC_CI_ALPINE,
-            "commands": [
-                "source /drone/src/.drone.env",
-                "git clone -b $CORE_BRANCH --single-branch --no-tags https://github.com/owncloud/core.git /srv/app/testrunner",
-                "cd /srv/app/testrunner",
-                "git checkout $CORE_COMMITID",
-            ],
-            "volumes": [stepVolumeOC10TestHelpers],
-        },
-    ]
 
 def latestOcisServer():
     environment = {
@@ -2205,6 +2192,7 @@ def oC10Server():
                 stepVolumeOC10Apps,
                 stepVolumeOC10Templates,
                 stepVolumeOC10PreServer,
+                stepVolumeOC10Crons,
             ]),
             "depends_on": ["wait-for-services", "copy-configs"],
         },
@@ -2310,12 +2298,14 @@ def copyConfigs():
             "cp %s/oc10/ldap-config.tmpl.json /etc/templates/ldap-config.tmpl.json" % (PARALLEL_DEPLOY_CONFIG_PATH),
             "cp %s/oc10/web.config.php /etc/templates/web.config.php" % (PARALLEL_DEPLOY_CONFIG_PATH),
             "cp %s/oc10/web-config.tmpl.json /etc/templates/web-config.tmpl.json" % (PARALLEL_DEPLOY_CONFIG_PATH),
+            "cp %s/oc10/ldap-sync-cron /tmp/ldap-sync-cron" % (PARALLEL_DEPLOY_CONFIG_PATH),
             "cp %s/oc10/10-custom-config.sh /etc/pre_server.d/10-custom-config.sh" % (PARALLEL_DEPLOY_CONFIG_PATH),
         ],
         "volumes": appendVolumes([
             stepVolumeOCISConfig,
             stepVolumeOC10Templates,
             stepVolumeOC10PreServer,
+            stepVolumeOC10Crons,
         ]),
     }]
 
