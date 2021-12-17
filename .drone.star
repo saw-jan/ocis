@@ -1888,11 +1888,6 @@ stepVolumeOC10Apps = \
         "name": "core-apps",
         "path": "/var/www/owncloud/apps",
     }
-stepVolumeOC10Crons = \
-    {
-        "name": "crons",
-        "path": "/tmp",
-    }
 stepVolumeOC10OCISData = \
     {
         "name": "data",
@@ -1918,11 +1913,6 @@ pipeOC10PreServerVol = \
 pipeOC10AppsVol = \
     {
         "name": "core-apps",
-        "temp": {},
-    }
-pipeOC10CronsVol = \
-    {
-        "name": "crons",
         "temp": {},
     }
 pipeOC10OCISSharedVol = \
@@ -1997,7 +1987,6 @@ def parallelDeployAcceptancePipeline(ctx):
                     pipeOC10TemplatesVol, 
                     pipeOC10PreServerVol,
                     pipeOC10AppsVol,
-                    pipeOC10CronsVol,
                     pipeOC10OCISSharedVol,
                     pipeOCISConfigVol,
                     pipelineVolumeOC10Tests,
@@ -2192,7 +2181,6 @@ def oC10Server():
                 stepVolumeOC10Apps,
                 stepVolumeOC10Templates,
                 stepVolumeOC10PreServer,
-                stepVolumeOC10Crons,
             ]),
             "depends_on": ["wait-for-services", "copy-configs"],
         },
@@ -2296,16 +2284,12 @@ def copyConfigs():
             "mkdir -p /etc/pre_server.d",
             "cp %s/oc10/oidc.config.php /etc/templates/oidc.config.php" % (PARALLEL_DEPLOY_CONFIG_PATH),
             "cp %s/oc10/ldap-config.tmpl.json /etc/templates/ldap-config.tmpl.json" % (PARALLEL_DEPLOY_CONFIG_PATH),
-            "cp %s/oc10/web.config.php /etc/templates/web.config.php" % (PARALLEL_DEPLOY_CONFIG_PATH),
-            "cp %s/oc10/web-config.tmpl.json /etc/templates/web-config.tmpl.json" % (PARALLEL_DEPLOY_CONFIG_PATH),
-            "cp %s/oc10/ldap-sync-cron /tmp/ldap-sync-cron" % (PARALLEL_DEPLOY_CONFIG_PATH),
             "cp %s/oc10/10-custom-config.sh /etc/pre_server.d/10-custom-config.sh" % (PARALLEL_DEPLOY_CONFIG_PATH),
         ],
         "volumes": appendVolumes([
             stepVolumeOCISConfig,
             stepVolumeOC10Templates,
             stepVolumeOC10PreServer,
-            stepVolumeOC10Crons,
         ]),
     }]
 
