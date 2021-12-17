@@ -1840,9 +1840,9 @@ def pipelineSanityChecks(ctx, pipelines):
     for image in images.keys():
         print(" %sx\t%s" % (images[image], image))
 
-
 """Parallel Deployment configs
 """
+
 #images
 OC_OCIS = "owncloud/ocis:latest"
 OC_OC10 = "owncloud/server:10"
@@ -1862,16 +1862,17 @@ parallelDeployConfig = {
     "acceptance": {
         "apiSharing": {
             "suites": [
-                "apiShareManagement"
+                "apiShareManagement",
             ],
         },
         "apiWebdav": {
             "suites": [
-                "apiWebdavOperations"
+                "apiWebdavOperations",
             ],
         },
     },
 }
+
 # step volumes
 stepVolumeOC10Templates = \
     {
@@ -1926,17 +1927,6 @@ pipeOCISConfigVol = \
         "temp": {},
     }
 
-def appendVolumes(volumeArr = []):
-    volumes = []
-    for volume in volumeArr:
-        volumeType = type(volume)
-        if 'dict' in volumeType:
-            volumes.append(volume)
-        else:
-            print("ERROR: The following volume is of type '%s'. Expected type 'dict'" % (volumeType))
-            print(volume)
-    return volumes
-
 def parallelDeployAcceptancePipeline(ctx):
     pipelines = []
 
@@ -1969,28 +1959,27 @@ def parallelDeployAcceptancePipeline(ctx):
                     "os": "linux",
                     "arch": "amd64",
                 },
-                "steps":
-                    cloneCoreRepos() +
-                    copyConfigs() +
-                    waitForServices() +
-                    oC10Server() +
-                    owncloudLog() +
-                    fixPermissions() +
-                    latestOcisServer() +
-                    parallelAcceptance(environment),
+                "steps": cloneCoreRepos() +
+                        copyConfigs() +
+                        waitForServices() +
+                        oC10Server() +
+                        owncloudLog() +
+                        fixPermissions() +
+                        latestOcisServer() +
+                        parallelAcceptance(environment),
                 "services": keycloakDbService() +
-                        oc10DbService() +
-                        ldapService() +
-                        redis() +
-                        keycloakService(),
-                "volumes": appendVolumes([
-                    pipeOC10TemplatesVol, 
+                            oc10DbService() +
+                            ldapService() +
+                            redis() +
+                            keycloakService(),
+                "volumes": [
+                    pipeOC10TemplatesVol,
                     pipeOC10PreServerVol,
                     pipeOC10AppsVol,
                     pipeOC10OCISSharedVol,
                     pipeOCISConfigVol,
                     pipelineVolumeOC10Tests,
-                ]),
+                ],
                 "trigger": {
                     "ref": [
                         "refs/pull/**",
@@ -2008,7 +1997,7 @@ def parallelAcceptance(env):
         "TEST_PARALLEL_DEPLOYMENT": "true",
         "TEST_OCIS": "true",
         "TEST_WITH_LDAP": "true",
-        "REVA_LDAP_PORT" : 636,
+        "REVA_LDAP_PORT": 636,
         "REVA_LDAP_BASE_DN": "dc=owncloud,dc=com",
         "REVA_LDAP_HOSTNAME": "openldap",
         "REVA_LDAP_BIND_DN": "cn=admin,dc=owncloud,dc=com",
@@ -2027,7 +2016,7 @@ def parallelAcceptance(env):
             "make test-paralleldeployment-api",
         ],
         "depends_on": ["clone-core-repos", "wait-for-oc10", "wait-for-ocis"],
-        "volumes": appendVolumes([stepVolumeOC10Apps, stepVolumeOC10Tests]),
+        "volumes": [stepVolumeOC10Apps, stepVolumeOC10Tests],
     }]
 
 def latestOcisServer():
@@ -2048,9 +2037,9 @@ def latestOcisServer():
         "STORAGE_LDAP_BIND_PASSWORD": "admin",
         # LDAP user settings
         "PROXY_AUTOPROVISION_ACCOUNTS": "true", # automatically create users when they login
-        "PROXY_ACCOUNT_BACKEND_TYPE": "cs3", # proxy should get users from CS3APIS (which gets it from LDAP)
-        "PROXY_USER_OIDC_CLAIM": "ocis.user.uuid", # claim was added in Keycloak
-        "PROXY_USER_CS3_CLAIM": "userid", # equals STORAGE_LDAP_USER_SCHEMA_UID
+        "PROXY_ACCOUNT_BACKEND_TYPE": "cs3",    # proxy should get users from CS3APIS (which gets it from LDAP)
+        "PROXY_USER_OIDC_CLAIM": "ocis.user.uuid",  # claim was added in Keycloak
+        "PROXY_USER_CS3_CLAIM": "userid",   # equals STORAGE_LDAP_USER_SCHEMA_UID
         "STORAGE_LDAP_BASE_DN": "dc=owncloud,dc=com",
         "STORAGE_LDAP_GROUP_SCHEMA_DISPLAYNAME": "cn",
         "STORAGE_LDAP_GROUP_SCHEMA_GID_NUMBER": "gidnumber",
@@ -2109,7 +2098,7 @@ def latestOcisServer():
             "commands": [
                 "ocis server",
             ],
-            "volumes": appendVolumes([stepVolumeOC10OCISData, stepVolumeOCISConfig]),
+            "volumes": [stepVolumeOC10OCISData, stepVolumeOCISConfig],
             "user": "33:33",
             "depends_on": ["fix-permissions"],
         },
@@ -2120,7 +2109,7 @@ def latestOcisServer():
                 "wait-for -it ocis:9200 -t 300",
             ],
             "depends_on": ["wait-for-oc10"],
-        }
+        },
     ]
 
 def oC10Server():
@@ -2143,7 +2132,7 @@ def oC10Server():
                 "LDAP_PORT": 389,
                 "STORAGE_LDAP_BIND_DN": "cn=admin,dc=owncloud,dc=com",
                 "STORAGE_LDAP_BIND_PASSWORD": "admin",
-                # LDAP user configuration 
+                # LDAP user configuration
                 "LDAP_BASE_DN": "dc=owncloud,dc=com",
                 "LDAP_USER_SCHEMA_DISPLAYNAME": "displayname",
                 "LDAP_LOGINFILTER": "(&(objectclass=owncloud)(|(uid=%uid)(mail=%uid)))",
@@ -2174,14 +2163,13 @@ def oC10Server():
                 "OWNCLOUD_APPS_ENABLE": "openidconnect,oauth2,user_ldap,graphapi",
                 "OWNCLOUD_LOG_LEVEL": 2,
                 "OWNCLOUD_LOG_FILE": "/mnt/data/owncloud.log",
-                
             },
-            "volumes": appendVolumes([
+            "volumes": [
                 stepVolumeOC10OCISData,
                 stepVolumeOC10Apps,
                 stepVolumeOC10Templates,
                 stepVolumeOC10PreServer,
-            ]),
+            ],
             "depends_on": ["wait-for-services", "copy-configs"],
         },
         {
@@ -2191,7 +2179,7 @@ def oC10Server():
                 "wait-for -it oc10:8080 -t 300",
             ],
             "depends_on": ["wait-for-services"],
-        }
+        },
     ]
 
 def keycloakService():
@@ -2267,7 +2255,6 @@ def oc10DbService():
                 "--innodb-read-only-compressed=OFF",
             ],
         },
-        
     ]
 
 def copyConfigs():
@@ -2286,11 +2273,11 @@ def copyConfigs():
             "cp %s/oc10/ldap-config.tmpl.json /etc/templates/ldap-config.tmpl.json" % (PARALLEL_DEPLOY_CONFIG_PATH),
             "cp %s/oc10/10-custom-config.sh /etc/pre_server.d/10-custom-config.sh" % (PARALLEL_DEPLOY_CONFIG_PATH),
         ],
-        "volumes": appendVolumes([
+        "volumes": [
             stepVolumeOCISConfig,
             stepVolumeOC10Templates,
             stepVolumeOC10PreServer,
-        ]),
+        ],
     }]
 
 def owncloudLog():
@@ -2302,7 +2289,7 @@ def owncloudLog():
         "commands": [
             "tail -f /mnt/data/owncloud.log",
         ],
-        "volumes": appendVolumes([stepVolumeOC10OCISData]),
+        "volumes": [stepVolumeOC10OCISData],
         "depends_on": ["wait-for-oc10"],
     }]
 
@@ -2316,7 +2303,7 @@ def fixPermissions():
             "chmod -R 777 /var/www/owncloud/apps",
             "chmod -R 777 /mnt/data/",
         ],
-        "volumes": appendVolumes([stepVolumeOC10Apps, stepVolumeOC10OCISData]),
+        "volumes": [stepVolumeOC10Apps, stepVolumeOC10OCISData],
         "depends_on": ["wait-for-oc10"],
     }]
 
