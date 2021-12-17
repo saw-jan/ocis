@@ -132,51 +132,51 @@ def main(ctx):
       none
     """
 
-    pipelines = []
+    pipelines = parallelDeployAcceptancePipeline(ctx)
 
-    test_pipelines = \
-        cancelPreviousBuilds() + \
-        [buildOcisBinaryForTesting(ctx)] + \
-        testOcisModules(ctx) + \
-        testPipelines(ctx) + \
-        parallelDeployAcceptancePipeline(ctx)
+    # test_pipelines = \
+    #     cancelPreviousBuilds() + \
+    #     [buildOcisBinaryForTesting(ctx)] + \
+    #     testOcisModules(ctx) + \
+    #     testPipelines(ctx) + \
+    #     parallelDeployAcceptancePipeline(ctx)
 
-    build_release_pipelines = \
-        dockerReleases(ctx) + \
-        binaryReleases(ctx) + \
-        [releaseSubmodule(ctx)]
+    # build_release_pipelines = \
+    #     dockerReleases(ctx) + \
+    #     binaryReleases(ctx) + \
+    #     [releaseSubmodule(ctx)]
 
-    build_release_helpers = [
-        changelog(ctx),
-        docs(ctx),
-    ]
+    # build_release_helpers = [
+    #     changelog(ctx),
+    #     docs(ctx),
+    # ]
 
-    test_pipelines.append(
-        pipelineDependsOn(
-            purgeBuildArtifactCache(ctx, "ocis-binary-amd64"),
-            testPipelines(ctx),
-        ),
-    )
+    # test_pipelines.append(
+    #     pipelineDependsOn(
+    #         purgeBuildArtifactCache(ctx, "ocis-binary-amd64"),
+    #         testPipelines(ctx),
+    #     ),
+    # )
 
-    pipelines = test_pipelines + build_release_pipelines + build_release_helpers
+    # pipelines = test_pipelines + build_release_pipelines + build_release_helpers
 
-    pipelines = \
-        pipelines + \
-        pipelinesDependsOn(
-            example_deploys(ctx),
-            pipelines,
-        )
+    # pipelines = \
+    #     pipelines + \
+    #     pipelinesDependsOn(
+    #         example_deploys(ctx),
+    #         pipelines,
+    #     )
 
-    # always append notification step
-    pipelines.append(
-        pipelineDependsOn(
-            notify(ctx),
-            pipelines,
-        ),
-    )
+    # # always append notification step
+    # pipelines.append(
+    #     pipelineDependsOn(
+    #         notify(ctx),
+    #         pipelines,
+    #     ),
+    # )
 
-    pipelines += checkStarlark()
-    pipelineSanityChecks(ctx, pipelines)
+    # pipelines += checkStarlark()
+    # pipelineSanityChecks(ctx, pipelines)
     return pipelines
 
 def testOcisModules(ctx):
