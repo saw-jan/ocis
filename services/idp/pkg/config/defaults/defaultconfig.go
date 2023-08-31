@@ -84,6 +84,16 @@ func DefaultConfig() *config.Config {
 				},
 			},
 			{
+				ID:              "sdk",
+				Secret:          "UBntmLjC2yYCeHwsyj73Uwo9TAaecAetRwMw0xYcvNL9yRdLSUi0hUAHfvCHFeFh",
+				Name:            "SDK client",
+				ApplicationType: "native",
+				RedirectURIs: []string{
+					"http://127.0.0.1",
+					"http://localhost",
+				},
+			},
+			{
 				ID:              "xdXOt13JKxym1B1QcEncf2XDkLAexMBFwiT9j6EfhhHFJhs2KM9jbjTmf8JBXE69",
 				Secret:          "UBntmLjC2yYCeHwsyj73Uwo9TAaecAetRwMw0xYcvNL9yRdLSUi0hUAHfvCHFeFh",
 				Name:            "ownCloud desktop app",
