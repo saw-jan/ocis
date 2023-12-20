@@ -94,6 +94,20 @@ func DefaultConfig() *config.Config {
 				},
 			},
 			{
+				ID:              "sdk",
+				Secret:          "UBntmLjC2yYCeHwsyj73Uwo9TAaecAetRwMw0xYcvNL9yRdLSUi0hUAHfvCHFeFh",
+				Name:            "Integration app",
+				// ApplicationType: "native", // default is "web"
+				// Insecure: true, // not supported yet (default is false)
+				RedirectURIs: []string{
+					// 1. If config doesn't support "Insecure" option,
+					//    we need to use secure "https" instead of "http".
+					// 2. One of the redirect URIs should exactly match the actual redirect url
+					"https://localhost",
+					"https://host.docker.internal",
+				},
+			},
+			{
 				ID:              "e4rAsNUSIUs0lF4nbv9FmCeUkTlV9GdgTLDH1b5uie7syb90SzEVrbN7HIpmWJeD",
 				Secret:          "dInFYGV33xKzhbRmpqQltYNdfLdJIfJ9L5ISoKhNoT9qZftpdWSP71VrpGR9pmoD",
 				Name:            "ownCloud Android app",

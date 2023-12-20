@@ -61,6 +61,7 @@ type Client struct {
 	ID              string   `yaml:"id"`
 	Name            string   `yaml:"name"`
 	Trusted         bool     `yaml:"trusted"`
+	// Insecure        bool     `yaml:"insecure"`
 	Secret          string   `yaml:"secret"`
 	RedirectURIs    []string `yaml:"redirect_uris"`
 	Origins         []string `yaml:"origins"`
